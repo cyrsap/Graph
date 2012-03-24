@@ -51,6 +51,14 @@ object MainForm: TMainForm
       GroupIndex = 1
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1088#1077#1073#1088#1086
     end
+    object CalcBtn: TSpeedButton
+      Left = 24
+      Top = 192
+      Width = 161
+      Height = 33
+      GroupIndex = 1
+      Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100
+    end
     object ClearBtn: TButton
       Left = 24
       Top = 272

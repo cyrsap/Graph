@@ -22,9 +22,10 @@ void TMainForm::Setup()
     Coord[ i ].x = -1;
     Coord[ i ].y = -1;
     Coord[ i ].act = false;
+    //Checked[ i ] = false;
     for ( int j = 1; j < NUM; j++ ){
       Length[ i ][ j ] = -1;
-      Checked[i ][ j ] = false;
+      MinLength[ i ][ j ] = -1;
     } 
   }//for
   // очистка канвы
@@ -194,6 +195,42 @@ void TMainForm::DeleteRib(int x1, int y1, int x2, int y2)
 }
 
 //---------------------------------------------------------------------------
+void TMainForm::FindRoute(int Start, int End)
+{
+	//Route.push_back(Start);
+  int min, imin, i, j;
+  
+  int W[NUM]; //рабочий массив
+  bool Flag[NUM];// массив проверки просмотренности вершин
+  for ( i = 1; i<NUM; i++) { // назначение рабочего массива длин путей и букв
+		W[i]= Length[Start][i];
+		Flag[i] = false;
+    if (Length[Start][i] > 0){
+      Route[i].push_back(i);
+    }
+	}//for  
+	for ( i = 1; i < NUM; i++ ) {
+		min = MAX_ROUTE;
+		imin = 0;
+		for ( j = 1; j < NUM; j++ ) {// нахождение мин пути до j-й вершины
+			if ((W[j] < min) && (!Flag[j])) {// если вершина не просмотрена
+				min = W[j];                    // и путь минимален
+				imin = j;
+			}//if
+		}//for
+		Flag[imin] = true; // вершина просмотрена
+		for ( j = 1; j < 9; j++) {
+			if (!Flag[j] && (W[j] > (W[imin] + Length[imin][j]))) {
+				W[j] = W[imin] + Length[imin][j];
+				Route[j] = Route[imin];
+        Route[j].push_back(j);
+			}//if
+		}//for
+	}//for
+  Way = W[End];
+}
+
+//---------------------------------------------------------------------------
 
 void __fastcall TMainForm::ImageMouseDown(TObject *Sender,
       TMouseButton Button, TShiftState Shift, int X, int Y)
@@ -216,6 +253,11 @@ void __fastcall TMainForm::ImageMouseDown(TObject *Sender,
     CurrY = Y;
     DownFlag = true;
   }//if
+  if (CalcBtn->Down){
+    CurrX = X;
+    CurrY = Y;
+    DownFlag = true;
+  }//if
 }
 //---------------------------------------------------------------------------
 
@@ -227,6 +269,9 @@ void __fastcall TMainForm::ImageMouseUp(TObject *Sender,
   }
   if (DeleteRibBtn->Down && DownFlag){
     DeleteRib( CurrX, CurrY, X, Y );
+  }
+  if (CalcBtn->Down && DownFlag){
+    
   }
   DownFlag = false;
 }
