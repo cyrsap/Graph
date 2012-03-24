@@ -29,11 +29,13 @@ __published:	// IDE-managed Components
   TPanel *Panel1;
   TImage *Image;
   TButton *ClearBtn;
+  TButton *ClsBtn;
   void __fastcall ImageMouseDown(TObject *Sender, TMouseButton Button,
           TShiftState Shift, int X, int Y);
   void __fastcall ImageMouseUp(TObject *Sender, TMouseButton Button,
           TShiftState Shift, int X, int Y);
   void __fastcall ClearBtnClick(TObject *Sender);
+  void __fastcall ClsBtnClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
   VertexPrs Coord[NUM];

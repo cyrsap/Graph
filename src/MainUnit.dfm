@@ -77,4 +77,13 @@ object MainForm: TMainForm
       OnMouseUp = ImageMouseUp
     end
   end
+  object ClsBtn: TButton
+    Left = 736
+    Top = 520
+    Width = 161
+    Height = 33
+    Caption = #1042#1099#1093#1086#1076
+    TabOrder = 2
+    OnClick = ClsBtnClick
+  end
 end

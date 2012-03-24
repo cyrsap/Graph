@@ -24,7 +24,7 @@ void TMainForm::Setup()
     Coord[ i ].act = false;
     for ( int j = 0; j < NUM-1; j++ ){
       Length[ i ][ j ] = -1;
-      Checked[i ][ j ] = 0;
+      Checked[i ][ j ] = false;
     } 
   }//for
   // очистка канвы
@@ -75,10 +75,25 @@ void TMainForm::DrawVertex(int x, int y){
 //---------------------------------------------------------------------------
 
 void TMainForm::DeleteVertex(int x, int y){
-  for ( int i = 1; i < NUM; i++ ){
+  int i,j;
+  for ( i = 1; i < NUM; i++ ){
     if ( ( x > Coord[i].x-12 ) && ( x < Coord[i].x+12 ) && ( y < Coord[i].y+12 ) && ( y > Coord[i].y-12 ) && (Coord[i].act) ){
       Coord[i].act = false;
       NumAll--;
+      for (j = 1; j < NUM; j++){
+        if ( Checked[i][j] == true ){  // удаление ребер
+          Image->Canvas->Pen->Color = clWhite;
+          Image->Canvas->Brush->Color = clWhite;
+          Image->Canvas->Font->Color = clWhite;
+          Image->Canvas->MoveTo(Coord[i].x, Coord[i].y);
+          Image->Canvas->LineTo(Coord[j].x, Coord[j].y);
+          Image->Canvas->TextOutA(Coord[i].x + (Coord[j].x - Coord[i].x)/2, Coord[i].y + (Coord[j].y - Coord[i].y)/2, IntToStr(Length[i][j]) );
+          Checked[i][j] = false;
+          Checked[j][i] = true;
+          Length[i][j] = -1;
+          Length[j][i] = -1;
+        }//if
+      }//for
       Image->Canvas->Pen->Color = clWhite;
       Image->Canvas->Brush->Color = clWhite;
       Image->Canvas->Font->Color = clWhite;
@@ -107,11 +122,16 @@ void TMainForm::AddRib(int x1, int y1, int x2, int y2)
       break;
     }//if
   }//for
+  if ( i == j ){
+    return;
+  }//if
   if (Flag){
     DialogueForm->ShowModal();
     if (DialogueForm->Flag){
       Length[i][j] = CurrentWeight;
       Length[j][i] = CurrentWeight;
+      Checked[i][j] = true;
+      Checked[j][i] = true;
       Image->Canvas->Pen->Color = clBlack;
       Image->Canvas->Brush->Color = clWhite;
       Image->Canvas->Font->Color = clBlack;
@@ -152,8 +172,6 @@ void __fastcall TMainForm::ImageMouseDown(TObject *Sender,
 
 
 
-
-
 void __fastcall TMainForm::ImageMouseUp(TObject *Sender,
       TMouseButton Button, TShiftState Shift, int X, int Y)
 {
@@ -168,6 +186,12 @@ void __fastcall TMainForm::ImageMouseUp(TObject *Sender,
 void __fastcall TMainForm::ClearBtnClick(TObject *Sender)
 {
   Setup();  
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TMainForm::ClsBtnClick(TObject *Sender)
+{
+  Close();  
 }
 //---------------------------------------------------------------------------
 
