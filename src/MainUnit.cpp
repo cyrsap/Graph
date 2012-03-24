@@ -89,7 +89,7 @@ void TMainForm::DeleteVertex(int x, int y){
       Coord[i].act = false;
       NumAll--;
       for (j = 1; j < NUM; j++){
-        if ( Checked[i][j] == true ){  // удаление ребер
+        if ( Length[i][j] > 0 ){  // удаление ребер
           Image->Canvas->Pen->Color = clWhite;
           Image->Canvas->Brush->Color = clWhite;
           Image->Canvas->Font->Color = clWhite;
@@ -99,8 +99,8 @@ void TMainForm::DeleteVertex(int x, int y){
           if ( Coord[j].act ){
             ReDrawVertex(j);
           }//if
-          Checked[i][j] = false;
-          Checked[j][i] = false;
+          /*Checked[i][j] = false;
+          Checked[j][i] = false;*/
           Length[i][j] = -1;
           Length[j][i] = -1;
         }//if
@@ -141,8 +141,8 @@ void TMainForm::AddRib(int x1, int y1, int x2, int y2)
     if (DialogueForm->Flag){
       Length[i][j] = CurrentWeight;
       Length[j][i] = CurrentWeight;
-      Checked[i][j] = true;
-      Checked[j][i] = true;
+      /*Checked[i][j] = true;
+      Checked[j][i] = true;*/
       Image->Canvas->Pen->Color = clBlack;
       Image->Canvas->Brush->Color = clWhite;
       Image->Canvas->Font->Color = clBlack;
@@ -151,8 +151,46 @@ void TMainForm::AddRib(int x1, int y1, int x2, int y2)
       Image->Canvas->TextOutA(Coord[i].x + (Coord[j].x - Coord[i].x)/2, Coord[i].y + (Coord[j].y - Coord[i].y)/2, IntToStr(CurrentWeight) );
       ReDrawVertex(i);
       ReDrawVertex(j);
-    }//if  
+    }//if
   }//if
+}
+
+//---------------------------------------------------------------------------
+
+void TMainForm::DeleteRib(int x1, int y1, int x2, int y2)
+{
+  int i,j;
+  bool Flag = false;
+  for ( i = 1; i < NUM; i++){//поиск первой вершиины
+    if (( x1 > Coord[i].x-12 ) && ( x1 < Coord[i].x+12 ) && ( y1 < Coord[i].y+12 ) && ( y1 > Coord[i].y-12 ) && (Coord[i].act) ){
+      Flag = true;
+      break;
+    }//if
+  }//for
+  for ( j = 1; j < NUM; j++){// поиск второй вершины
+    if (( x2 > Coord[j].x-12 ) && ( x2 < Coord[j].x+12 ) && ( y2 < Coord[j].y+12 ) && ( y2 > Coord[j].y-12 ) && (Coord[j].act) ){
+      Flag = true;
+      break;
+    }//if
+  }//for
+  if ( i == j ){
+    return;
+  }//if
+  if (Flag){
+    Length[i][j] = -1;
+    Length[j][i] = -1;
+    /*Checked[i][j] = false;
+    Checked[j][i] = false;*/
+    Image->Canvas->Pen->Color = clWhite;
+    Image->Canvas->Brush->Color = clWhite;
+    Image->Canvas->Font->Color = clWhite;
+    Image->Canvas->MoveTo(Coord[i].x, Coord[i].y);
+    Image->Canvas->LineTo(Coord[j].x, Coord[j].y);
+    Image->Canvas->TextOutA(Coord[i].x + (Coord[j].x - Coord[i].x)/2, Coord[i].y + (Coord[j].y - Coord[i].y)/2, IntToStr(CurrentWeight) );
+    ReDrawVertex(i);
+    ReDrawVertex(j);
+  }//if
+  return;
 }
 
 //---------------------------------------------------------------------------
@@ -173,10 +211,13 @@ void __fastcall TMainForm::ImageMouseDown(TObject *Sender,
     CurrY = Y;
     DownFlag = true;
   }//if
+  if (DeleteRibBtn->Down){
+    CurrX = X;
+    CurrY = Y;
+    DownFlag = true;
+  }//if
 }
 //---------------------------------------------------------------------------
-
-
 
 void __fastcall TMainForm::ImageMouseUp(TObject *Sender,
       TMouseButton Button, TShiftState Shift, int X, int Y)
@@ -184,10 +225,12 @@ void __fastcall TMainForm::ImageMouseUp(TObject *Sender,
   if (AddRibBtn->Down && DownFlag){
     AddRib( CurrX, CurrY, X, Y );
   }
+  if (DeleteRibBtn->Down && DownFlag){
+    DeleteRib( CurrX, CurrY, X, Y );
+  }
   DownFlag = false;
 }
 //---------------------------------------------------------------------------
-
 
 void __fastcall TMainForm::ClearBtnClick(TObject *Sender)
 {
@@ -200,4 +243,5 @@ void __fastcall TMainForm::ClsBtnClick(TObject *Sender)
   Close();  
 }
 //---------------------------------------------------------------------------
+
 

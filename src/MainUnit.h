@@ -51,6 +51,7 @@ public:		// User declarations
   void DeleteVertex(int x, int y);
   void AddRib(int x1, int y1, int x2, int y2);
   void DeleteRib(int x1, int y1, int x2, int y2);
+  void FindRoute(int i, int j);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TMainForm *MainForm;
