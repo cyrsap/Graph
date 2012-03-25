@@ -24,8 +24,8 @@ void TMainForm::Setup()
     Coord[ i ].act = false;
     //Checked[ i ] = false;
     for ( int j = 1; j < NUM; j++ ){
-      Length[ i ][ j ] = -1;
-      MinLength[ i ][ j ] = -1;
+      Length[ i ][ j ] = MAX_ROUTE;
+      MinLength[ i ] = MAX_ROUTE;
     } 
   }//for
   // очистка канвы
@@ -36,6 +36,7 @@ void TMainForm::Setup()
   Image->Canvas->Brush->Color = clYellow;
   Image->Canvas->Font->Color = clBlack;
   DownFlag = false;
+  Label->Visible = false;
   return;
 }
 //---------------------------------------------------------------------------
@@ -102,8 +103,8 @@ void TMainForm::DeleteVertex(int x, int y){
           }//if
           /*Checked[i][j] = false;
           Checked[j][i] = false;*/
-          Length[i][j] = -1;
-          Length[j][i] = -1;
+          Length[i][j] = MAX_ROUTE;
+          Length[j][i] = MAX_ROUTE;
         }//if
       }//for
       Image->Canvas->Pen->Color = clWhite;
@@ -178,8 +179,8 @@ void TMainForm::DeleteRib(int x1, int y1, int x2, int y2)
     return;
   }//if
   if (Flag){
-    Length[i][j] = -1;
-    Length[j][i] = -1;
+    Length[i][j] = MAX_ROUTE;
+    Length[j][i] = MAX_ROUTE;
     /*Checked[i][j] = false;
     Checked[j][i] = false;*/
     Image->Canvas->Pen->Color = clWhite;
@@ -195,25 +196,98 @@ void TMainForm::DeleteRib(int x1, int y1, int x2, int y2)
 }
 
 //---------------------------------------------------------------------------
+
+void TMainForm::Calculate(int x1, int y1, int x2, int y2)
+{
+  int i,j,k;
+  bool Flag1 = false, Flag2 = false;
+  for ( i = 1; i < NUM; i++){//поиск первой вершиины
+    if (( x1 > Coord[i].x-12 ) && ( x1 < Coord[i].x+12 ) && ( y1 < Coord[i].y+12 ) && ( y1 > Coord[i].y-12 ) && (Coord[i].act) ){
+      Flag1 = true;
+      break;
+    }//if
+  }//for
+  for ( j = 1; j < NUM; j++){// поиск второй вершины
+    if (( x2 > Coord[j].x-12 ) && ( x2 < Coord[j].x+12 ) && ( y2 < Coord[j].y+12 ) && ( y2 > Coord[j].y-12 ) && (Coord[j].act) ){
+      Flag2 = true;
+      break;
+    }//if
+  }//for
+  
+  if ( i == j ){
+    return;
+  }//if
+  if (Flag1 && Flag2){
+    FindRoute( i, j );
+    if ( (Way < 1000) && (Way > 0) ){
+      Label->Caption = "Минимальное расстояние \r\nот вершины №"+IntToStr(i)+" \r\nдо вершины №"+IntToStr(j)+"\r\nравно "+IntToStr(Way);
+      Label->Caption += "\r\n";
+      //Label->Caption += Ways[j];
+      ReDrawRib(i, StrToInt(Ways[j][1]), clRed);
+      for (k = 2; k <= Ways[j].Length(); k++){
+        ReDrawRib(StrToInt(Ways[j][k-1]), StrToInt(Ways[j][k]), clRed);                      
+      }
+    }//if
+    else{
+      Label->Caption = "Из вершины №"+IntToStr(i)+"\r\nнельзя достичь \r\nвершины №"+IntToStr(j);
+    }
+    Label->Visible = true;
+  }//if
+  else{
+    MessageBox(0, "Вы не выбрали вершины", "Внимание!", MB_OK);
+  }//else
+}
+
+//---------------------------------------------------------------------------
+
+void TMainForm::ReDrawRib(int Start, int End, TColor Colour)
+{
+      Image->Canvas->Pen->Color = Colour;
+      Image->Canvas->Brush->Color = clWhite;
+      Image->Canvas->Font->Color = Colour;
+      Image->Canvas->MoveTo(Coord[Start].x, Coord[Start].y);
+      Image->Canvas->LineTo(Coord[End].x, Coord[End].y);
+      Image->Canvas->TextOutA(Coord[Start].x + (Coord[End].x - Coord[Start].x)/2, Coord[Start].y + (Coord[End].y - Coord[Start].y)/2, IntToStr(Length[Start][End]) );
+      ReDrawVertex(Start);
+      ReDrawVertex(End);
+}
+
+//---------------------------------------------------------------------------
+
+void TMainForm::ReDrawAll()
+{
+  int i,j;
+  for (i = 1; i<NUM/2+1; i++){
+    for ( j = 1; j< NUM/2+1; j++ ){
+      if ( (Length[i][j]<1000) && (Length[i][j]>0) ){
+        ReDrawRib(i, j, clBlack);
+      }//if
+    }
+  }
+  for (i = 1; i<NUM; i++){
+    if (Coord[i].act){
+      ReDrawVertex(i);
+    }
+  }
+}
+
+//---------------------------------------------------------------------------
 void TMainForm::FindRoute(int Start, int End)
 {
 	//Route.push_back(Start);
   int min, imin, i, j;
-  
   int W[NUM]; //рабочий массив
   bool Flag[NUM];// массив проверки просмотренности вершин
   for ( i = 1; i<NUM; i++) { // назначение рабочего массива длин путей и букв
 		W[i]= Length[Start][i];
 		Flag[i] = false;
-    if (Length[Start][i] > 0){
-      Route[i].push_back(i);
-    }
+    Ways[i] = IntToStr(i);
 	}//for  
 	for ( i = 1; i < NUM; i++ ) {
 		min = MAX_ROUTE;
 		imin = 0;
 		for ( j = 1; j < NUM; j++ ) {// нахождение мин пути до j-й вершины
-			if ((W[j] < min) && (!Flag[j])) {// если вершина не просмотрена
+			if ((W[j] < min) && (!Flag[j]) && (W[j]>0)) {// если вершина не просмотрена
 				min = W[j];                    // и путь минимален
 				imin = j;
 			}//if
@@ -222,8 +296,7 @@ void TMainForm::FindRoute(int Start, int End)
 		for ( j = 1; j < 9; j++) {
 			if (!Flag[j] && (W[j] > (W[imin] + Length[imin][j]))) {
 				W[j] = W[imin] + Length[imin][j];
-				Route[j] = Route[imin];
-        Route[j].push_back(j);
+				Ways[j] = Ways[imin] + IntToStr(j);
 			}//if
 		}//for
 	}//for
@@ -240,7 +313,9 @@ void __fastcall TMainForm::ImageMouseDown(TObject *Sender,
     return;
   }
   if (DeleteVertexBtn->Down){
-    DeleteVertex( X, Y );
+    if (MessageBox(0, "Вы действительно хотите удалить данную вершину?", "Внимание!", MB_YESNO) == IDYES){
+      DeleteVertex( X, Y );
+    }
     return;
   }
   if (AddRibBtn->Down){
@@ -268,10 +343,12 @@ void __fastcall TMainForm::ImageMouseUp(TObject *Sender,
     AddRib( CurrX, CurrY, X, Y );
   }
   if (DeleteRibBtn->Down && DownFlag){
-    DeleteRib( CurrX, CurrY, X, Y );
+    if (MessageBox(0, "Вы действительно хотите удалить данное ребро?", "Внимание!", MB_YESNO) == IDYES){
+      DeleteRib( CurrX, CurrY, X, Y );
+    }
   }
   if (CalcBtn->Down && DownFlag){
-    
+    Calculate(CurrX, CurrY, X, Y);
   }
   DownFlag = false;
 }
@@ -279,7 +356,9 @@ void __fastcall TMainForm::ImageMouseUp(TObject *Sender,
 
 void __fastcall TMainForm::ClearBtnClick(TObject *Sender)
 {
-  Setup();  
+  if (MessageBox(0, "Вы действительно хотите все удалить?", "Внимание!", MB_YESNO) == IDYES){
+    Setup();
+  }
 }
 //---------------------------------------------------------------------------
 
@@ -289,4 +368,29 @@ void __fastcall TMainForm::ClsBtnClick(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+
+
+void __fastcall TMainForm::AddVertexBtnClick(TObject *Sender)
+{
+  ReDrawAll();  
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TMainForm::DeleteVertexBtnClick(TObject *Sender)
+{
+  ReDrawAll();  
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TMainForm::AddRibBtnClick(TObject *Sender)
+{
+  ReDrawAll();  
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TMainForm::DeleteRibBtnClick(TObject *Sender)
+{
+  ReDrawAll();  
+}
+//---------------------------------------------------------------------------
 

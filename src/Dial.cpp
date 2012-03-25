@@ -24,6 +24,10 @@ void __fastcall TDialogueForm::ConfirmBtnClick(TObject *Sender)
     Flag = false;
     MessageBox(0, "Вы ввели неправильные символы!", "Внимание!", MB_OK);
   }
-  Close();    
+  if (Flag && ((MainForm->CurrentWeight < 1 ) || (MainForm->CurrentWeight > 100)) ){
+    Flag = false;
+    MessageBox(0, "Допустимый диапазон ввода веса ребра от 1 до 100", "Внимание!", MB_OK);
+  }
+  Close();
 }
 //---------------------------------------------------------------------------

@@ -26,6 +26,7 @@ object MainForm: TMainForm
       Height = 33
       GroupIndex = 1
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1074#1077#1088#1096#1080#1085#1091
+      OnClick = AddVertexBtnClick
     end
     object DeleteVertexBtn: TSpeedButton
       Left = 24
@@ -34,6 +35,7 @@ object MainForm: TMainForm
       Height = 33
       GroupIndex = 1
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1074#1077#1088#1096#1080#1085#1091
+      OnClick = DeleteVertexBtnClick
     end
     object AddRibBtn: TSpeedButton
       Left = 24
@@ -42,6 +44,7 @@ object MainForm: TMainForm
       Height = 33
       GroupIndex = 1
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1088#1077#1073#1088#1086
+      OnClick = AddRibBtnClick
     end
     object DeleteRibBtn: TSpeedButton
       Left = 24
@@ -50,6 +53,7 @@ object MainForm: TMainForm
       Height = 33
       GroupIndex = 1
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1088#1077#1073#1088#1086
+      OnClick = DeleteRibBtnClick
     end
     object CalcBtn: TSpeedButton
       Left = 24
@@ -59,9 +63,22 @@ object MainForm: TMainForm
       GroupIndex = 1
       Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100
     end
+    object Label: TLabel
+      Left = 32
+      Top = 248
+      Width = 34
+      Height = 16
+      Caption = 'Label'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+    end
     object ClearBtn: TButton
       Left = 24
-      Top = 272
+      Top = 440
       Width = 161
       Height = 33
       Caption = #1054#1095#1080#1089#1090#1080#1090#1100
@@ -86,12 +103,20 @@ object MainForm: TMainForm
     end
   end
   object ClsBtn: TButton
-    Left = 736
+    Left = 728
     Top = 520
     Width = 161
     Height = 33
     Caption = #1042#1099#1093#1086#1076
     TabOrder = 2
     OnClick = ClsBtnClick
+  end
+  object HelpBtn: TButton
+    Left = 904
+    Top = 520
+    Width = 33
+    Height = 33
+    Caption = '?'
+    TabOrder = 3
   end
 end

@@ -37,12 +37,18 @@ __published:	// IDE-managed Components
   TButton *ClearBtn;
   TButton *ClsBtn;
   TSpeedButton *CalcBtn;
+  TLabel *Label;
+  TButton *HelpBtn;
   void __fastcall ImageMouseDown(TObject *Sender, TMouseButton Button,
           TShiftState Shift, int X, int Y);
   void __fastcall ImageMouseUp(TObject *Sender, TMouseButton Button,
           TShiftState Shift, int X, int Y);
   void __fastcall ClearBtnClick(TObject *Sender);
   void __fastcall ClsBtnClick(TObject *Sender);
+  void __fastcall AddVertexBtnClick(TObject *Sender);
+  void __fastcall DeleteVertexBtnClick(TObject *Sender);
+  void __fastcall AddRibBtnClick(TObject *Sender);
+  void __fastcall DeleteRibBtnClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
   T_Routes Route;
@@ -50,7 +56,8 @@ public:		// User declarations
   //bool Checked[NUM];
   int Way; //путь до вершины
   int Length[NUM][NUM];   //длина ребер между вершинами
-  int MinLength[NUM][NUM];//минимальное расстояние между вершинами
+  AnsiString Ways[NUM];
+  int MinLength[NUM];//минимальное расстояние между вершинами
   short NumAll;
   bool DownFlag; // флаг для добавления или удаления ребра
   int CurrentWeight, CurrX, CurrY; // Вес вершины для задания ребра и координаты начальных точек для задания и удаления ребра
@@ -62,7 +69,9 @@ public:		// User declarations
   void AddRib(int x1, int y1, int x2, int y2);
   void DeleteRib(int x1, int y1, int x2, int y2);
   void FindRoute(int Start, int End);
-  void Calculate();
+  void Calculate(int x1, int y1, int x2, int y2);
+  void ReDrawRib(int Start, int End, TColor Colour);
+  void ReDrawAll();
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TMainForm *MainForm;
