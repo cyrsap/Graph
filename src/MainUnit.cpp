@@ -115,6 +115,7 @@ void TMainForm::DeleteVertex(int x, int y){
       }
     }//if
   }//for
+  ReDrawAll();
 }
 
 //---------------------------------------------------------------------------
@@ -193,6 +194,7 @@ void TMainForm::DeleteRib(int x1, int y1, int x2, int y2)
       ReDrawVertex(j);
     }
   }//if
+  ReDrawAll();
   return;
 }
 
@@ -257,6 +259,9 @@ void TMainForm::ReDrawRib(int Start, int End, TColor Colour)
 
 void TMainForm::ReDrawAll()
 {
+  Image->Canvas->Pen->Color = clWhite;
+  Image->Canvas->Brush->Color = clWhite;
+  Image->Canvas->Rectangle(0, 0, 1000, 1000);//Image->Height, Image->Width);
   int i,j;
   for (i = 1; i<NUM/2+1; i++){
     for ( j = 1; j< NUM/2+1; j++ ){
