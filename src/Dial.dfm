@@ -23,7 +23,7 @@ object DialogueForm: TDialogueForm
     Width = 121
     Height = 21
     TabOrder = 0
-    Text = '2'
+    Text = '5'
   end
   object ConfirmBtn: TButton
     Left = 64

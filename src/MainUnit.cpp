@@ -139,8 +139,12 @@ void TMainForm::AddRib(int x1, int y1, int x2, int y2)
   if ( i == j ){
     return;
   }//if
+  if (Length[i][j]<MAX_ROUTE){
+    return;
+  }
   if ( (Flag) && Coord[j].act && Coord[i].act ){
     DialogueForm->ShowModal();
+    DialogueForm->WeightEdit->Text = "5";
     if (DialogueForm->Flag){
       Length[i][j] = CurrentWeight;
       Length[j][i] = CurrentWeight;
