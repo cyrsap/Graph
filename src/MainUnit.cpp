@@ -347,6 +347,7 @@ void __fastcall TMainForm::ImageMouseUp(TObject *Sender,
       return;
   }
   if (CalcBtn->Down && DownFlag){
+    ReDrawAll();
     Calculate(CurrX, CurrY, X, Y);
     return;
   }
