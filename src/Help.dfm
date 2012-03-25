@@ -1,9 +1,11 @@
 object HelpForm: THelpForm
   Left = 378
   Top = 122
-  Width = 496
-  Height = 466
+  BorderIcons = []
+  BorderStyle = bsSingle
   Caption = #1050#1088#1072#1090#1082#1072#1103' '#1089#1087#1088#1072#1074#1082#1072
+  ClientHeight = 439
+  ClientWidth = 488
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

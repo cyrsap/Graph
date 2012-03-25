@@ -1,9 +1,11 @@
 object MainForm: TMainForm
   Left = 210
   Top = 128
-  Width = 961
-  Height = 595
-  Caption = 'MainForm'
+  BorderIcons = []
+  BorderStyle = bsSingle
+  Caption = #1056#1072#1089#1095#1077#1090' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1086#1075#1086' '#1087#1091#1090#1080' '#1085#1072' '#1075#1088#1072#1092#1077' '#1087#1086' '#1072#1083#1075#1086#1088#1080#1090#1084#1091' '#1044#1077#1081#1082#1089#1090#1088#1099
+  ClientHeight = 568
+  ClientWidth = 953
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

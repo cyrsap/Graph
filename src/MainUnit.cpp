@@ -18,7 +18,7 @@ __fastcall TMainForm::TMainForm(TComponent* Owner)
 void TMainForm::Setup()
 {
   NumAll = 0;
-  for ( int i = 1; i < NUM; i++ ){
+  for ( int i = 0; i < NUM; i++ ){
     Coord[ i ].x = -1;
     Coord[ i ].y = -1;
     Coord[ i ].act = false;
@@ -162,24 +162,25 @@ void TMainForm::AddRib(int x1, int y1, int x2, int y2)
 void TMainForm::DeleteRib(int x1, int y1, int x2, int y2)
 {
   int i,j;
-  bool Flag = false;
+  bool Flag1, Flag2 = false;
   for ( i = 1; i < NUM; i++){//поиск первой вершиины
     if (( x1 > Coord[i].x-12 ) && ( x1 < Coord[i].x+12 ) && ( y1 < Coord[i].y+12 ) && ( y1 > Coord[i].y-12 ) && (Coord[i].act) ){
-      Flag = true;
+      Flag1 = true;
       break;
     }//if
   }//for
   for ( j = 1; j < NUM; j++){// поиск второй вершины
     if (( x2 > Coord[j].x-12 ) && ( x2 < Coord[j].x+12 ) && ( y2 < Coord[j].y+12 ) && ( y2 > Coord[j].y-12 ) && (Coord[j].act) ){
-      Flag = true;
+      Flag2 = true;
       break;
     }//if
   }//for
   if ( i == j ){
     return;
   }//if
-  if (Flag){
-    if (MessageBox(0, "¬ы действительно хотите удалить данное ребро?", "¬нимание!", MB_YESNO) == IDYES){
+  if (Flag1 && Flag2){
+   if (Length[i][j]<MAX_ROUTE)
+    if (MessageBox(0, "¬ы действительно хотите удалить данное ребро?", "¬нимание!", MB_YESNO) == IDYES ){
       Length[i][j] = MAX_ROUTE;
       Length[j][i] = MAX_ROUTE;
       Image->Canvas->Pen->Color = clWhite;
@@ -293,7 +294,7 @@ void TMainForm::FindRoute(int Start, int End)
 			}//if
 		}//for
 		Flag[imin] = true; // вершина просмотрена
-		for ( j = 1; j < 9; j++) {
+		for ( j = 1; j < NUM; j++) {
 			if (!Flag[j] && (W[j] > (W[imin] + Length[imin][j]))) {
 				W[j] = W[imin] + Length[imin][j];
 				Ways[j] = Ways[imin] + IntToStr(j);
