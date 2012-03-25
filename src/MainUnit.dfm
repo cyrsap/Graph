@@ -99,7 +99,7 @@ object MainForm: TMainForm
       Left = 0
       Top = 0
       Width = 673
-      Height = 481
+      Height = 483
       OnMouseDown = ImageMouseDown
       OnMouseUp = ImageMouseUp
     end
