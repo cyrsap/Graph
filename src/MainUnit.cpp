@@ -22,11 +22,9 @@ void TMainForm::Setup()
     Coord[ i ].x = -1;
     Coord[ i ].y = -1;
     Coord[ i ].act = false;
-    //Checked[ i ] = false;
     for ( int j = 1; j < NUM; j++ ){
       Length[ i ][ j ] = MAX_ROUTE;
-      MinLength[ i ] = MAX_ROUTE;
-    } 
+    }
   }//for
   // очистка канвы
   Image->Canvas->Pen->Color = clWhite;
@@ -88,6 +86,7 @@ void TMainForm::DeleteVertex(int x, int y){
   int i,j;
   for ( i = 1; i < NUM; i++ ){
     if ( ( x > Coord[i].x-12 ) && ( x < Coord[i].x+12 ) && ( y < Coord[i].y+12 ) && ( y > Coord[i].y-12 ) && (Coord[i].act) ){
+      if (MessageBox(0, "Вы действительно хотите удалить данную вершину?", "Внимание!", MB_YESNO) == IDYES){
       Coord[i].act = false;
       NumAll--;
       for (j = 1; j < NUM; j++){
@@ -113,6 +112,7 @@ void TMainForm::DeleteVertex(int x, int y){
       Image->Canvas->Ellipse(Coord[i].x-12, Coord[i].y-12, Coord[i].x+12, Coord[i].y+12);
       Image->Canvas->TextOutA(Coord[i].x-4, Coord[i].y-7, IntToStr( i ));
       return;
+      }
     }//if
   }//for
 }
@@ -179,18 +179,18 @@ void TMainForm::DeleteRib(int x1, int y1, int x2, int y2)
     return;
   }//if
   if (Flag){
-    Length[i][j] = MAX_ROUTE;
-    Length[j][i] = MAX_ROUTE;
-    /*Checked[i][j] = false;
-    Checked[j][i] = false;*/
-    Image->Canvas->Pen->Color = clWhite;
-    Image->Canvas->Brush->Color = clWhite;
-    Image->Canvas->Font->Color = clWhite;
-    Image->Canvas->MoveTo(Coord[i].x, Coord[i].y);
-    Image->Canvas->LineTo(Coord[j].x, Coord[j].y);
-    Image->Canvas->TextOutA(Coord[i].x + (Coord[j].x - Coord[i].x)/2, Coord[i].y + (Coord[j].y - Coord[i].y)/2, IntToStr(CurrentWeight) );
-    ReDrawVertex(i);
-    ReDrawVertex(j);
+    if (MessageBox(0, "Вы действительно хотите удалить данное ребро?", "Внимание!", MB_YESNO) == IDYES){
+      Length[i][j] = MAX_ROUTE;
+      Length[j][i] = MAX_ROUTE;
+      Image->Canvas->Pen->Color = clWhite;
+      Image->Canvas->Brush->Color = clWhite;
+      Image->Canvas->Font->Color = clWhite;
+      Image->Canvas->MoveTo(Coord[i].x, Coord[i].y);
+      Image->Canvas->LineTo(Coord[j].x, Coord[j].y);
+      Image->Canvas->TextOutA(Coord[i].x + (Coord[j].x - Coord[i].x)/2, Coord[i].y + (Coord[j].y - Coord[i].y)/2, IntToStr(CurrentWeight) );
+      ReDrawVertex(i);
+      ReDrawVertex(j);
+    }
   }//if
   return;
 }
@@ -313,10 +313,8 @@ void __fastcall TMainForm::ImageMouseDown(TObject *Sender,
     return;
   }
   if (DeleteVertexBtn->Down){
-    if (MessageBox(0, "Вы действительно хотите удалить данную вершину?", "Внимание!", MB_YESNO) == IDYES){
       DeleteVertex( X, Y );
-    }
-    return;
+      return;
   }
   if (AddRibBtn->Down){
     CurrX = X;
@@ -341,14 +339,16 @@ void __fastcall TMainForm::ImageMouseUp(TObject *Sender,
 {
   if (AddRibBtn->Down && DownFlag){
     AddRib( CurrX, CurrY, X, Y );
+    return;
   }
   if (DeleteRibBtn->Down && DownFlag){
-    if (MessageBox(0, "Вы действительно хотите удалить данное ребро?", "Внимание!", MB_YESNO) == IDYES){
+
       DeleteRib( CurrX, CurrY, X, Y );
-    }
+      return;
   }
   if (CalcBtn->Down && DownFlag){
     Calculate(CurrX, CurrY, X, Y);
+    return;
   }
   DownFlag = false;
 }
@@ -391,6 +391,12 @@ void __fastcall TMainForm::AddRibBtnClick(TObject *Sender)
 void __fastcall TMainForm::DeleteRibBtnClick(TObject *Sender)
 {
   ReDrawAll();  
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TMainForm::HelpBtnClick(TObject *Sender)
+{
+  HelpForm->ShowModal();  
 }
 //---------------------------------------------------------------------------
 

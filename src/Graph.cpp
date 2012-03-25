@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------------
 USEFORM("MainUnit.cpp", MainForm);
 USEFORM("Dial.cpp", DialogueForm);
+USEFORM("Help.cpp", HelpForm);
 //---------------------------------------------------------------------------
 WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -13,6 +14,7 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
      Application->Initialize();
      Application->CreateForm(__classid(TMainForm), &MainForm);
      Application->CreateForm(__classid(TDialogueForm), &DialogueForm);
+     Application->CreateForm(__classid(THelpForm), &HelpForm);
      Application->Run();
   }
   catch (Exception &exception)

@@ -12,11 +12,10 @@
 #include <ExtCtrls.hpp>
 #include <Buttons.hpp>
 #include "Dial.h"
-#include <vector.h>
+#include "Help.h"
 
 //---------------------------------------------------------------------------
 
-typedef vector <int> T_Routes[NUM];
 //---------------------------------------------------------------------------
 struct VertexPrs{
   int x; //координаты точки на полотне
@@ -49,16 +48,14 @@ __published:	// IDE-managed Components
   void __fastcall DeleteVertexBtnClick(TObject *Sender);
   void __fastcall AddRibBtnClick(TObject *Sender);
   void __fastcall DeleteRibBtnClick(TObject *Sender);
+  void __fastcall HelpBtnClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
-  T_Routes Route;
   VertexPrs Coord[NUM];
-  //bool Checked[NUM];
   int Way; //путь до вершины
   int Length[NUM][NUM];   //длина ребер между вершинами
-  AnsiString Ways[NUM];
-  int MinLength[NUM];//минимальное расстояние между вершинами
-  short NumAll;
+  AnsiString Ways[NUM];   //пути
+  short NumAll;           // общее количество вершин
   bool DownFlag; // флаг для добавления или удаления ребра
   int CurrentWeight, CurrX, CurrY; // Вес вершины для задания ребра и координаты начальных точек для задания и удаления ребра
   __fastcall TMainForm(TComponent* Owner);

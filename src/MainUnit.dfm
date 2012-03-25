@@ -1,6 +1,6 @@
 object MainForm: TMainForm
-  Left = 255
-  Top = 172
+  Left = 210
+  Top = 128
   Width = 961
   Height = 595
   Caption = 'MainForm'
@@ -118,5 +118,6 @@ object MainForm: TMainForm
     Height = 33
     Caption = '?'
     TabOrder = 3
+    OnClick = HelpBtnClick
   end
 end
